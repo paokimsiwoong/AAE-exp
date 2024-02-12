@@ -1,4 +1,4 @@
-# AAE-exp
+# AAE-exp (작성중)
 Adversarial Autoencoder 논문 코드 구현 및 실험 재현
 
 2-3 실험 결과     
