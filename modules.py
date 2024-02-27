@@ -114,6 +114,83 @@ class EncoderWithReParam(nn.Module):
                 # γ = 1, β = 0 으로 초기화
 
 
+def reparameterization5(mean, std, odim):
+    device = std.device
+
+    sam = torch.Tensor(np.random.normal(0, 1, (std.size(0), odim))).to(device)
+
+    z = mean + std * sam
+    # print(f"==>> z.shape: {z.shape}")
+
+    return z
+
+
+class EncoderExp5(nn.Module):
+    def __init__(self, idim, odim, tau=1):
+        super().__init__()
+
+        self.seq = nn.Sequential(
+            nn.Linear(idim, 1000),
+            nn.BatchNorm1d(1000),
+            nn.ReLU(),
+            # nn.Dropout(p=0.25),
+            nn.Linear(1000, 1000),
+            nn.BatchNorm1d(1000),
+            nn.ReLU(),
+            # nn.Dropout(p=0.25),
+            # nn.Linear(1000, odim),
+            # nn.ReLU(),
+        )
+        self.odim = odim
+        self.tau = tau
+
+        # self.logvar = nn.Linear(1000, odim)
+        self.std = nn.Sequential(nn.Linear(1000, odim), nn.ReLU())
+        self.mean = nn.Linear(1000, odim)
+        # self.label = nn.Sequential(nn.Linear(1000, odim), nn.Softmax(dim=-1))
+        self.label = nn.Linear(1000, odim)
+
+        # self._initialize_weights()
+
+    def forward(self, x):
+        x = x.view(x.size(0), -1)
+
+        x = self.seq(x)
+
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        mean = self.mean(x)
+
+        std = self.std(x)
+
+        z = reparameterization5(mean=mean, std=std, odim=self.odim)
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        label = self.label(x)
+        label = F.gumbel_softmax(label, tau=self.tau, dim=-1)
+        # https://pytorch.org/docs/stable/generated/torch.nn.functional.gumbel_softmax.html#torch.nn.functional.gumbel_softmax
+
+        return z, label
+
+    def _initialize_weights(self):
+        for m in self.modules():
+            # self.modules() 은 모델 안에 들어있는 모든 module들(nn.Conv2d, nn.ReLu, nn.Linear 등)을 순회하는 iterator
+
+            if isinstance(m, nn.Linear):
+                # isinstance(확인할 클래스 객체, 클래스이름) 으로 한 객체가 특정 클래스의 객체인지를 알 수 있다
+                nn.init.normal_(m.weight, mean=0.0, std=0.01)
+
+                if m.bias is not None:
+                    # batch normalization을 하고 있기때문에 conv는 bias를 따로 만들지 않아야한다.
+                    nn.init.constant_(m.bias, 0)
+                    # nn.init.constant_(tensor, value) 는 주어진 tensor의 모든 entry들을 정해진 value값으로 바꿔준다
+
+            elif isinstance(m, nn.BatchNorm1d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+                # BatchNorm(x) = γx + β 에서
+                # γ = 1, β = 0 으로 초기화
+
+
 class Decoder(nn.Module):
     def __init__(self, idim, odim):
         super().__init__()
@@ -165,6 +242,106 @@ class Discriminator(nn.Module):
 
         self.seq = nn.Sequential(
             nn.Linear(idim + classdim, 1000),
+            nn.BatchNorm1d(1000),
+            nn.ReLU(),
+            # nn.Dropout(p=0.25),
+            # nn.Linear(1000, 1000),
+            # nn.BatchNorm1d(1000),
+            # nn.ReLU(),
+            # nn.Linear(1000, 1000),
+            # nn.BatchNorm1d(1000),
+            # nn.ReLU(),
+            nn.Linear(1000, 1000),
+            nn.BatchNorm1d(1000),
+            nn.ReLU(),
+            # nn.Dropout(p=0.25),
+            nn.Linear(1000, 1),
+            nn.Sigmoid(),
+        )
+
+        self._initialize_weights()
+
+    def forward(self, x):
+        # print(f"==>> d input x: {x}")
+        x = self.seq(x)
+        return x
+
+    def _initialize_weights(self):
+        for m in self.modules():
+            # self.modules() 은 모델 안에 들어있는 모든 module들(nn.Conv2d, nn.ReLu, nn.Linear 등)을 순회하는 iterator
+
+            if isinstance(m, nn.Linear):
+                # isinstance(확인할 클래스 객체, 클래스이름) 으로 한 객체가 특정 클래스의 객체인지를 알 수 있다
+                nn.init.normal_(m.weight, mean=0.0, std=0.01)
+
+                if m.bias is not None:
+                    # batch normalization을 하고 있기때문에 conv는 bias를 따로 만들지 않아야한다.
+                    nn.init.constant_(m.bias, 0)
+                    # nn.init.constant_(tensor, value) 는 주어진 tensor의 모든 entry들을 정해진 value값으로 바꿔준다
+
+            elif isinstance(m, nn.BatchNorm1d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+                # BatchNorm(x) = γx + β 에서
+                # γ = 1, β = 0 으로 초기화
+
+
+class Discriminator5_Style(nn.Module):
+    def __init__(self, idim):
+        super().__init__()
+
+        self.seq = nn.Sequential(
+            nn.Linear(idim, 1000),
+            nn.BatchNorm1d(1000),
+            nn.ReLU(),
+            # nn.Dropout(p=0.25),
+            # nn.Linear(1000, 1000),
+            # nn.BatchNorm1d(1000),
+            # nn.ReLU(),
+            # nn.Linear(1000, 1000),
+            # nn.BatchNorm1d(1000),
+            # nn.ReLU(),
+            nn.Linear(1000, 1000),
+            nn.BatchNorm1d(1000),
+            nn.ReLU(),
+            # nn.Dropout(p=0.25),
+            nn.Linear(1000, 1),
+            nn.Sigmoid(),
+        )
+
+        self._initialize_weights()
+
+    def forward(self, x):
+        # print(f"==>> d input x: {x}")
+        x = self.seq(x)
+        return x
+
+    def _initialize_weights(self):
+        for m in self.modules():
+            # self.modules() 은 모델 안에 들어있는 모든 module들(nn.Conv2d, nn.ReLu, nn.Linear 등)을 순회하는 iterator
+
+            if isinstance(m, nn.Linear):
+                # isinstance(확인할 클래스 객체, 클래스이름) 으로 한 객체가 특정 클래스의 객체인지를 알 수 있다
+                nn.init.normal_(m.weight, mean=0.0, std=0.01)
+
+                if m.bias is not None:
+                    # batch normalization을 하고 있기때문에 conv는 bias를 따로 만들지 않아야한다.
+                    nn.init.constant_(m.bias, 0)
+                    # nn.init.constant_(tensor, value) 는 주어진 tensor의 모든 entry들을 정해진 value값으로 바꿔준다
+
+            elif isinstance(m, nn.BatchNorm1d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+                # BatchNorm(x) = γx + β 에서
+                # γ = 1, β = 0 으로 초기화
+
+
+class Discriminator5_Label(nn.Module):
+    def __init__(self, idim):
+        super().__init__()
+
+        self.seq = nn.Sequential(
+            nn.Linear(idim, 1000),
             nn.BatchNorm1d(1000),
             nn.ReLU(),
             # nn.Dropout(p=0.25),

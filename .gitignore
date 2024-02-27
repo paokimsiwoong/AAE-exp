@@ -1,3 +1,6 @@
 AAE_old/
 mnist/
 images/
+wandb/
+__pycache__/
+code_prac.ipynb
