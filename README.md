@@ -1,5 +1,5 @@
 # AAE-exp (작성중)
-Adversarial Autoencoder 논문의 2-3, 5번 챕터를 코드로 구현하고 실험하였다.
+Adversarial Autoencoder 논문의 2-3, 5번 챕터의 실험을 코드로 구현하고 실험하였다.
 
 ## 2-3 실험 결과     
 
