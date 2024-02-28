@@ -29,7 +29,7 @@ optimizer로는 모두 SGD를 사용하고, Simultaneous gradient ascent-descent
 
 ![image3](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/7f4230a9-18e9-48ab-8078-031a42e3917e)
 
-auto encoder의 복원 결과와 원본의 비교
+auto encoder의 복원 이미지와 원본이미지의 비교
 
 ![image4](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/e4f7f62a-f70f-4cf1-bf45-d40e1cc9e770)
 ![image5](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/f1aa2854-077a-4aca-a607-9b58fa303e9f)
