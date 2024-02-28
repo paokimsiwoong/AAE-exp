@@ -41,3 +41,4 @@ auto encoder의 복원 이미지와 원본이미지의 비교
 
 ## 참고문헌
 [Adversarial Autoencoders](https://arxiv.org/abs/1511.05644)
+[심층 신경망의 수학적 기초 ch5](https://www.math.snu.ac.kr/~ernestryu/courses/DNN/chapter5.pdf)
