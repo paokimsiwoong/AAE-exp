@@ -10,11 +10,11 @@ Adversarial Autoencoder 논문의 2-3, 5번 챕터의 실험을 코드로 구현
 
 encoder는 2차원 좌표 (x,y)와 표준편차 std ($\sigma_x,\sigma_y$)를 출력하였고 표준편차는 표준편차의 범위를 만족하기 위해 ReLU를 사용하였다. 
 
-이 출력된 (x,y)와 std ($\sigma_x,\sigma_y$)는 $\mathcal{N}(0,I)$
+이 출력된 (x,y)와 std ($\sigma_x,\sigma_y$)는 $\mathcal{N}((0,0),I)$에서 추출한 Gaussian noise를 affine transformation할 때 사용하였다((x,y)로 translation과 rotation, std ($\sigma_x,\sigma_y$)는 scaling factor).
 
 batch size는 100으로 진행하고 총 1000 epochs 학습을 진행하였다.
 
-optimizer로는 모두 SGD를 사용하고, reconstruction cost의 학습률은 0.01을 사용하고 
+optimizer로는 모두 SGD를 사용하고, reconstruction cost의 learning rate는 0.01을 사용하고 나머지는 0.1을 사용하였다. learning rate scheduler로는 모두 MultiStelLR을 사용하였고, 50 epoch, 500 epoch에 learning rate를 1/10배 하였다.
 
 
 ![image1](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/650ca6dc-d1ba-4084-8a5e-6d102965e9b1)
