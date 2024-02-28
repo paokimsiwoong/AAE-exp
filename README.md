@@ -24,6 +24,9 @@ optimizer로는 모두 SGD를 사용하고, Simultaneous gradient ascent-descent
 학습이 끝난 encoder가 MNIST의 1만개의 test set 데이터들을 2차원에 encode 한 결과
 
 ![image2](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/5088facc-dbb5-4597-b759-264bc1190e56)
+
+각각의 leaf에서 추출한 sample을 decoder에 입력해 생성한 결과
+
 ![image3](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/7f4230a9-18e9-48ab-8078-031a42e3917e)
 ![image4](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/e4f7f62a-f70f-4cf1-bf45-d40e1cc9e770)
 ![image5](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/f1aa2854-077a-4aca-a607-9b58fa303e9f)
