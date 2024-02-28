@@ -3,6 +3,7 @@ Adversarial Autoencoder 논문의 2-3, 5번 챕터의 실험을 코드로 구현
 
 ## 2-3 실험 결과     
 ![image](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/2c1d0261-a29d-4485-ae97-f153b512ff77)
+
 위 그림과 같은 구조로 encoder와 decoder, discriminator들을 구성하였고 논문과 동일하게 hidden unit이 1000개인 두개의 레이어를 사용하였다.
 활성함수 ReLU를 적용하기 전에 Batch normalization을 적용하였고 dropout은 사용하지 않았다. encoder는 최종 출력으로 2차원 좌표 (x,y)와 표준편차 std ($\sigma_x,\sigma_y$)를 출력하였고 표준편차의 범위를 만족하기 위해 ReLU를 사용하였다. batch size는 100으로 진행하고 
 
