@@ -308,7 +308,7 @@ def train2_3(hp):
 
             label = torch.from_numpy(np.random.randint(low=0, high=10, size=img.size(0))).to(hp["device"])
 
-            z_real = torch.vmap(similarity)(label, sam)
+            z_real = torch.vmap(affinity)(label, sam)
             # 전체 mixture 분포에서 표본 추출
             class_label[:, -1] = 1
             # 11차원 one-hot vector, label 없음을 마지막 11번째 자리에 1을 넣어 표현
@@ -397,7 +397,7 @@ def train2_3(hp):
 
                 sam = torch.Tensor(np.random.normal(0, 1, (img_t.size(0), 2))).to(hp["device"])
 
-                z_real = torch.vmap(similarity)(label, sam)
+                z_real = torch.vmap(affinity)(label, sam)
                 # label이 지정하는 분포에서 표본 추출
 
                 class_label = F.one_hot(label, num_classes=11)
