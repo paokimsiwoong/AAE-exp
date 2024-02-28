@@ -28,6 +28,9 @@ optimizer로는 모두 SGD를 사용하고, Simultaneous gradient ascent-descent
 각각의 leaf에서 추출한 sample을 decoder에 입력해 생성한 결과
 
 ![image3](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/7f4230a9-18e9-48ab-8078-031a42e3917e)
+
+auto encoder의 복원 결과와 원본의 비교
+
 ![image4](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/e4f7f62a-f70f-4cf1-bf45-d40e1cc9e770)
 ![image5](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/f1aa2854-077a-4aca-a607-9b58fa303e9f)
 ![image6](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/8003dbd7-f1ec-4772-9fca-0a64fcddc768)
