@@ -6,8 +6,9 @@ import torch.nn.functional as F
 import numpy as np
 
 
-def similarity(xy, std, sam):
+def affinity(xy, std, sam):
     # similarity = isotropic scaling + isometry(rotation + translation)
+    # isotropic scaling이 아니므로 similarity가 아니다 -> affinity
 
     device = std.device
     h = torch.tensor([[1.0], [0.0]]).to(device)
@@ -16,7 +17,7 @@ def similarity(xy, std, sam):
     y = xy @ v
 
     r = torch.sqrt(x**2 + y**2 + 1e-6)
-    # sqrt도 0이 되지 않도록 1e-6 추가
+    # sqrt 0이 되지 않도록 1e-6 추가
 
     # s = torch.sin(theta)
     s = y / (r + 1e-6)
@@ -36,6 +37,7 @@ def similarity(xy, std, sam):
     m = torch.tensor([1.0, 0.0]).to(device)
     translation = r * m
     translation = translation @ rot.T
+    # TODO: (x,y)를 다시 계산하지않고 단순히 xy를 그대로 사용하도록 수정하기
     sample = sample + translation
     # print(f"==>> sample.shape: {sample.shape}")
     # 좌표 이동
@@ -48,7 +50,7 @@ def reparameterization(xy, std):
 
     sam = torch.Tensor(np.random.normal(0, 1, (std.size(0), 2))).to(device)
 
-    z = torch.vmap(similarity)(xy, std, sam)
+    z = torch.vmap(affinity)(xy, std, sam)
     # print(f"==>> z.shape: {z.shape}")
 
     return z

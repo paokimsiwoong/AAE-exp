@@ -43,8 +43,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def similarity(l, sam):
+def affinity(l, sam):
     # similarity = isotropic scaling + isometry(rotation + translation)
+    # isotropic scaling이 아니므로 similarity가 아니다 -> affinity
     s = torch.sin(l * np.pi / 5)
     c = torch.cos(l * np.pi / 5)
 
@@ -110,7 +111,7 @@ def sample_image(n_row, epoch, decoder, device, timestamp):
     # label = torch.from_numpy(np.random.randint(low=0, high=10, size=n_row)).to(device)
     label = torch.from_numpy(np.arange(0, 10)).to(device)
 
-    z_real = torch.vmap(similarity)(label, sam)
+    z_real = torch.vmap(affinity)(label, sam)
     # 0~9 생성에 사용할 z_real
     gen_imgs = decoder(z_real)
 
@@ -211,7 +212,7 @@ def train2_3(hp):
             # N(0,1) 2차원 white data를 먼저 추출한 후 변환하는 방식으로 변경하기
             sam = torch.Tensor(np.random.normal(0, 1, (img.size(0), 2))).to(hp["device"])
 
-            z_real = torch.vmap(similarity)(label, sam)
+            z_real = torch.vmap(affinity)(label, sam)
 
             # label이 지정하는 분포에서 표본 추출
 
@@ -554,7 +555,9 @@ def train5(hp):
     dataset_dir = "C:/Users/paoki/workspace/AAE/mnist"
     batch_size = hp["batch_size"]
 
-    unsv_loader, sv_loader, test_loader = create_loader(dataset_dir, batch_size, 100)
+    split_size = 1000
+
+    unsv_loader, sv_loader, test_loader = create_loader(dataset_dir, batch_size, split_size)
 
     # model intance 생성 및 초기화
     encoder = hp["encoder"]
@@ -630,6 +633,9 @@ def train5(hp):
             img = img.to(hp["device"])
             label = label.to(hp["device"])
 
+            class_label = F.one_hot(label, num_classes=10).float()
+            # 10차원 one-hot vector로 변경
+
             # Reconstruction Phase
             optim_ae.zero_grad()
             z, pred = encoder(img)
@@ -649,14 +655,7 @@ def train5(hp):
             optim_dc_s.zero_grad()
 
             z_sam = torch.Tensor(np.random.normal(0, 1, (img.size(0), 10))).to(hp["device"])
-            l_sam = (
-                F.one_hot(
-                    torch.Tensor(np.random.randint(low=0, high=10, size=img.size(0))).to(torch.int64),
-                    num_classes=10,
-                )
-                .float()
-                .to(hp["device"])
-            )
+            l_sam = class_label
 
             z, pred = encoder(img)
             # simultaneous gradient ascent-descent를 할지, alternating gradient ascent-descent를 할지 결정해야한다
@@ -719,8 +718,8 @@ def train5(hp):
             optim_en_semi.zero_grad()
 
             z, pred = encoder(img)
-            class_label = F.one_hot(label, num_classes=10).float()
-            # 10차원 one-hot vector로 변경
+            # class_label = F.one_hot(label, num_classes=10).float()
+            # # 10차원 one-hot vector로 변경
 
             loss_classification = criterion_ce(pred, class_label)
             loss_classification.backward()
@@ -732,7 +731,7 @@ def train5(hp):
 
             loss_sv_c_value += loss_classification.item()
 
-            log_interval = 1
+            log_interval = split_size / batch_size
             if (i + 1) % log_interval == 0:
                 loss_sv_r_value_mean = loss_sv_r_value / log_interval
                 loss_sv_d_l_value_mean = loss_sv_d_l_value / log_interval
@@ -854,7 +853,7 @@ def train5(hp):
             cls_pred = torch.argmax(pred, dim=-1)
             train_unsv_correct += (cls_pred == _.to(hp["device"])).sum().item()
 
-            log_interval = 599
+            log_interval = (60000 - split_size) / batch_size
             if (i + 1) % log_interval == 0:
                 loss_unsv_r_value_mean = loss_unsv_r_value / log_interval
                 loss_unsv_d_l_value_mean = loss_unsv_d_l_value / log_interval
