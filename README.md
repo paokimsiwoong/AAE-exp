@@ -1,4 +1,4 @@
-# AAE-exp (작성중)
+# AAE-exp
 Adversarial Autoencoder 논문의 2-3 챕터 잠재벡터 분포조정 실험을 코드로 구현하고 실험하였다.
 
 ## 2-3 실험 결과     
