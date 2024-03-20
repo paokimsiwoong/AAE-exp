@@ -35,9 +35,6 @@ auto encoder의 복원 이미지와 원본이미지의 비교
 ![image5](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/f1aa2854-077a-4aca-a607-9b58fa303e9f)
 ![image6](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/8003dbd7-f1ec-4772-9fca-0a64fcddc768)
 
-![image](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/444d99ae-67f6-448c-a9e2-e31b5d39e4aa)
-
-
 ## 참고문헌
 [Adversarial Autoencoders](https://arxiv.org/abs/1511.05644)
 
