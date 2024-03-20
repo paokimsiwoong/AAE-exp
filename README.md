@@ -1,5 +1,5 @@
 # AAE-exp (작성중)
-Adversarial Autoencoder 논문의 2-3, 5번 챕터의 실험을 코드로 구현하고 실험하였다.
+Adversarial Autoencoder 논문의 2-3 챕터 잠재벡터 분포조정 실험을 코드로 구현하고 실험하였다.
 
 ## 2-3 실험 결과     
 ![image](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/2c1d0261-a29d-4485-ae97-f153b512ff77)
@@ -35,7 +35,6 @@ auto encoder의 복원 이미지와 원본이미지의 비교
 ![image5](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/f1aa2854-077a-4aca-a607-9b58fa303e9f)
 ![image6](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/8003dbd7-f1ec-4772-9fca-0a64fcddc768)
 
-## 5 실험 결과
 ![image](https://github.com/paokimsiwoong/AAE-exp/assets/37607763/444d99ae-67f6-448c-a9e2-e31b5d39e4aa)
 
 
